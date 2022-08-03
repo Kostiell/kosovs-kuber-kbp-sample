@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
+    app: redis
+  namespace: default
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+    protocol: TCP
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-write
+  labels:
+    app: redis-write
+spec:
+  clusterIP: None
+  selector:
+    app: redis
+  ports:
+  - port: 6379
