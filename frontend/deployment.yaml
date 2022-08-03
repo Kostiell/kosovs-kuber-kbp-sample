@@ -15,8 +15,12 @@ spec:
       labels:
         app: frontend
     spec:
+      volumes:
+        - name: passwd-volume
+          secret:
+            secretName: redis-passwd
       containers:
-      - image: my-repo/journal-server:v1-abcde
+      - image: brendanburns/journal-server:latest
         imagePullPolicy: IfNotPresent
         name: frontend
         resources:
@@ -26,3 +30,13 @@ spec:
           limits:
             cpu: "1"
             memory: "500Mi"
+        env:
+          - name: JOURNAL_ENTRIES
+            valueFrom:
+              configMapKeyRef:
+                key: journalEntries
+                name: frontend-config
+        volumeMounts:
+          - mountPath: "/etc/redis-passwd"
+            name: passwd-volume
+            readOnly: true
